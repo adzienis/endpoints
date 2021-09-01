@@ -1,15 +1,14 @@
-
 # I wouldve actually just made this polymorphic from the beginning, but I don't
 # want to deal with refactoring now.
 class UserEvent < ApplicationRecord
 
-  enum event_type: {click: "click", hover: "hover"}
+  # I guess add more
+  enum event_type: { click: "click", hover: "hover" }
 
   validates :data, presence: true
   validate :valid_blob, on: :create
 
   def valid_blob
-
     errors.add(:data, "missing event_type") unless data&.key?("event_type")
     errors.add(:data, "missing name") unless data&.key?("name")
 
@@ -26,12 +25,11 @@ class UserEvent < ApplicationRecord
                                  .exec_query(grouped_events.to_sql)
                                  .rows.to_h
 
-    big_hash.entries.map{|key,value| { key => value} }
+    big_hash.entries.map { |key, value| { key => value } }
   end
 
   def self.todays_stats
     self.stats_on_day(Date.today)
   end
-
 
 end
