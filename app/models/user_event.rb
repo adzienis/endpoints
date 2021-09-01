@@ -1,3 +1,6 @@
+
+# I wouldve actually just made this polymorphic from the beginning, but I don't
+# want to deal with refactoring now.
 class UserEvent < ApplicationRecord
 
   enum event_type: {click: "click", hover: "hover"}
@@ -13,8 +16,9 @@ class UserEvent < ApplicationRecord
     errors.add(:data, "invalid event_type") unless UserEvent.event_types[data&.fetch("event_type", nil)]
   end
 
-  def self.todays_stats
-    todays_events = UserEvent.where(created_at: Date.today.all_day)
+  def self.stats_on_day(date)
+
+    todays_events = UserEvent.where("DATE(created_at) = ?", date)
     grouped_events = todays_events.group("data ->> 'event_type'")
                                   .select("data ->> 'event_type' as event_type, count(id)")
 
@@ -23,7 +27,10 @@ class UserEvent < ApplicationRecord
                                  .rows.to_h
 
     big_hash.entries.map{|key,value| { key => value} }
+  end
 
+  def self.todays_stats
+    self.stats_on_day(Date.today)
   end
 
 
