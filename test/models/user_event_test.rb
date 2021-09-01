@@ -6,7 +6,7 @@ class UserEventTest < ActiveSupport::TestCase
   # end
 
   test "valid user_event" do
-    UserEvent.create({
+    event = UserEvent.create({
                        data: {
                          name: "key",
                          event_type: "click"
@@ -14,6 +14,17 @@ class UserEventTest < ActiveSupport::TestCase
                      })
     assert(UserEvent.all.count == 1)
   end
+
+  test "invalid user_event" do
+    UserEvent.create({
+                       data: {
+                         name: "key",
+                         event_type: "foo"
+                       }
+                     })
+    assert(UserEvent.all.count == 0)
+  end
+
   test "missing key name" do
 
     UserEvent.create({
