@@ -6,7 +6,7 @@ class UserEventsController < ApplicationController
                                     data: user_event_params
                                   })
 
-    render json: user_event, status: 422 and return unless user_event.valid?
+    render json: { error: user_event.errors.full_messages }, status: 422 and return unless user_event.valid?
 
     render json: user_event, status: 201
   end
