@@ -1,5 +1,11 @@
 class UserEventsController < ApplicationController
 
+  def todays_stats
+    render json: {
+      "todays_stats": UserEvent.todays_stats
+    }
+  end
+
   def create
 
     user_event = UserEvent.create({
